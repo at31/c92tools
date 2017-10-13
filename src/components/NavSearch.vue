@@ -32,19 +32,24 @@
       </q-infinite-scroll>
     </div-->
     <br>
-      <q-collapsible
-      label="Навигация подробно"
-      sublabel=""
-      style="margin-bottom: 25px"
-      class="shadow-2"
-    >
+    <q-modal ref="basicModal" :content-css="{padding: '50px', maxWidth: '90vw'}">
       <q-data-table
         :data="navdetail"
         :config="ndconfig"
         :columns="ndcolumns"  
       > 
-    </q-data-table>
-    </q-collapsible>
+      </q-data-table>
+      <q-btn color="primary" @click="$refs.basicModal.close()">Close</q-btn>
+    </q-modal>
+
+    <!--q-collapsible
+      label="Навигация подробно"
+      sublabel=""
+      style="margin-bottom: 25px"
+      class="shadow-2"
+    >      
+    </q-collapsible-->
+
     <br>
       <q-data-table
         :data="respdata"
@@ -63,6 +68,7 @@
 
 <script>
 import {
+  QModal,
   Toast,
   QSpinnerDots,
   QInfiniteScroll,
@@ -80,6 +86,7 @@ import axios from 'axios'
 export default {
   name: 'NavSearch',
   components: {
+    QModal,
     QSpinnerDots,
     QInfiniteScroll,
     QList,
@@ -162,6 +169,9 @@ export default {
   watch: {
     selection: function (row) {
 
+    },
+    navdetail: function () {
+      this.$refs.basicModal.open()
     }
   },
   computed: {
@@ -183,7 +193,6 @@ export default {
   },
   methods: {
     showNav (row) {
-      console.log('!!!!!!!!!', row)
       let infoQuery = `select t1.mdate "lastmod", (select max(rownum) from f_${row.row.name} t2 where t2.NAVNOM=t1.NAVNOM) "rowsumm" from f_${row.row.name} t1 where t1.navnom='${row.row.navnom}' and t1.mdate=(select max(t3.mdate) from f_${row.row.name} t3 where t3.NAVNOM=t1.NAVNOM)`
       let strSQL = `select * from f_${row.row.name} where NAVNOM=${row.row.navnom}`
       this.$store.dispatch('getNav', {navName: `${row.row.name}_${row.row.navnom}`, query: strSQL, infoquery: infoQuery, servers: [row.row.serverName]})

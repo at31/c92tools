@@ -17,10 +17,61 @@ const state = {
   servers: [],
   navSearchResult: [],
   diffResult: [[], []],
-  navigation: {result: []}
+  navigation: {result: []},
+  localNavigation: {result: []},
+  allNavs: [{ name: 'nav', server: 'server name', id: 'some-IDs', navnom: 'navnom' }],
+  navigationList: []
 }
 
 const actions = {
+  getNavigationList (context, serverName) {
+    Loading.show(spinner)
+    axios.post('http://192.168.5.142:8080/c92t/res/wtch/navigation-list', serverName)
+      .then(resp => {
+        if (resp.status === 200) {
+          Loading.hide()
+          Toast.create.positive('загрузка закончена')
+          context.commit('SET_NAVIGATION_LIST', resp.data)
+        }
+      })
+      .catch(err => {
+        Loading.hide()
+        Toast.create.negative('ошибка обращения к серверу')
+        console.log(err)
+      })
+  },
+  getLocalNav (context, id) {
+    Loading.show(spinner)
+    axios.get('http://192.168.5.142:8080/c92t/res/wtch/getlocalnav/' + id)
+      .then(resp => {
+        if (resp.status === 200) {
+          Loading.hide()
+          Toast.create.positive('загрузка закончена')
+          context.commit('SET_LOCAL_NAVIGATION', resp.data)
+        }
+      })
+      .catch(err => {
+        Loading.hide()
+        Toast.create.negative('ошибка обращения к серверу')
+        console.log(err)
+      })
+  },
+  getAllNavs (context) {
+    Loading.show(spinner)
+    axios.get('http://192.168.5.142:8080/c92t/res/wtch/getallnavs')
+      .then(resp => {
+        if (resp.status === 200) {
+          Loading.hide()
+          Toast.create.positive('загрузка закончена')
+          context.commit('SET_ALL_NAVIGATION', resp.data)
+        }
+      })
+      .catch(err => {
+        Loading.hide()
+        Toast.create.negative('ошибка обращения к серверу')
+        console.log(err)
+      })
+  },
   getNav (context, nav) {
     console.log('nav', nav)
     Loading.show(spinner)
@@ -130,8 +181,16 @@ const actions = {
 }
 
 const mutations = {
+  SET_NAVIGATION_LIST (state, data) {
+    state.navigationList = data
+  },
+  SET_LOCAL_NAVIGATION (state, data) {
+    state.localNavigation = data
+  },
+  SET_ALL_NAVIGATION (state, data) {
+    state.allNavs = data
+  },
   SET_NAVIGATION (state, data) {
-    console.log('navdetail', data)
     state.navigation = data
   },
   SET_DIFF_RESULT (state, data) {
@@ -150,7 +209,6 @@ const mutations = {
   },
   SERVERS_LOADED (state, data) {
     state.serversList = data.map(srv => {
-      console.log(srv.__id)
       return {
         id: srv.__id,
         name: srv.name,
@@ -169,6 +227,5 @@ export default new Vuex.Store({
   actions,
   mutations,
   modules: {
-
   }
 })
