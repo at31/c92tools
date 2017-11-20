@@ -11,7 +11,8 @@ const spinner = {
   message: '',
   messageColor: 'black'
 }
-const REST_SERVER_ADDRESS = 'http://192.168.5.142:8080/c92t/res/wtch/'
+// const REST_SERVER_ADDRESS = 'http://192.168.5.142:8080/c92t/res/wtch/'
+const REST_SERVER_ADDRESS = 'http://127.0.0.1:8080/c92t/res/wtch/'
 const state = {
   serversList: [],
   servers: [],
@@ -26,7 +27,7 @@ const state = {
 const actions = {
   getNavigationList (context, serverName) {
     Loading.show(spinner)
-    axios.post('http://192.168.5.142:8080/c92t/res/wtch/navigation-list', serverName)
+    axios.post(REST_SERVER_ADDRESS + 'navigation-list', serverName)
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -42,7 +43,7 @@ const actions = {
   },
   getLocalNav (context, id) {
     Loading.show(spinner)
-    axios.get('http://192.168.5.142:8080/c92t/res/wtch/getlocalnav/' + id)
+    axios.get(REST_SERVER_ADDRESS + 'getlocalnav/' + id)
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -58,7 +59,7 @@ const actions = {
   },
   getAllNavs (context) {
     Loading.show(spinner)
-    axios.get('http://192.168.5.142:8080/c92t/res/wtch/getallnavs')
+    axios.get(REST_SERVER_ADDRESS + 'getallnavs')
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -75,7 +76,7 @@ const actions = {
   getNav (context, nav) {
     console.log('nav', nav)
     Loading.show(spinner)
-    axios.post('http://192.168.5.142:8080/c92t/res/wtch/getnav', nav)
+    axios.post(REST_SERVER_ADDRESS + 'getnav', nav)
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -92,7 +93,7 @@ const actions = {
   diffNav (context, nav) {
     console.log('nav', nav)
     Loading.show(spinner)
-    axios.post('http://192.168.5.142:8080/c92t/res/wtch/navdiff', nav)
+    axios.post(REST_SERVER_ADDRESS + 'navdiff', nav)
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -108,7 +109,7 @@ const actions = {
   },
   saveNavLocalDB (context, nav) {
     Loading.show(spinner)
-    axios.post('http://192.168.5.142:8080/c92t/res/wtch/navsave', nav)
+    axios.post(REST_SERVER_ADDRESS + 'navsave', nav)
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -123,7 +124,7 @@ const actions = {
   },
   navSearch (context, sObj) {
     Loading.show(spinner)
-    axios.post('http://192.168.5.142:8080/c92t/res/wtch/allsearch', sObj)
+    axios.post(REST_SERVER_ADDRESS + 'allsearch', sObj)
       .then(resp => {
         Loading.hide()
         if (resp.status === 200) {
@@ -148,7 +149,7 @@ const actions = {
       return context.state.serversList.findIndex(_el => _el.id === el.id) > -1
     })
     console.log('arr', newarr, delarr, updarr)
-    axios.post('http://192.168.5.142:8080/c92t/res/wtch/uservers', {newarr: newarr, delarr: delarr, updarr: updarr})
+    axios.post(REST_SERVER_ADDRESS + 'uservers', {newarr: newarr, delarr: delarr, updarr: updarr})
       .then(resp => {
         if (resp.status === 200) {
           Loading.hide()
@@ -164,7 +165,7 @@ const actions = {
   loadAllServers (context, srvrs) {
     if (context.state.serversList.length === 0) {
       Loading.show(spinner)
-      axios.get('http://192.168.5.142:8080/c92t/res/wtch/serverslist')
+      axios.get(REST_SERVER_ADDRESS + 'serverslist')
         .then(resp => {
           Loading.hide()
           if (resp.status === 200) {
