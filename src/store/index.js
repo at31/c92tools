@@ -11,7 +11,7 @@ const spinner = {
   message: '',
   messageColor: 'black'
 }
-const REST_SERVER_ADDRESS1 = 'http://192.168.5.142:8080/c92t/res/wtch/'
+const REST_SERVER_ADDRESS11 = 'http://192.168.5.142:8080/c92t/res/wtch/'
 const REST_SERVER_ADDRESS = 'http://127.0.0.1:8080/c92t/res/wtch/'
 
 const state = {
